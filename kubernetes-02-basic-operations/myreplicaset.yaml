@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: ReplicaSet
+metadata:
+  name: nginx-rs
+  labels:
+    environment: dev
+spec:
+  # modify replicas according to your case
+  replicas: 3
+  selector:
+    matchLabels:
+      app: nginx # podun label'i ile ayni olmali,replicaset hangi podlardan sorumlu oldugunu anlayabilmeli 
+  template:
+    metadata: # podun bilgileri
+      labels:
+        app: nginx
+    spec:
+      containers:
+      - name: mynginx
+        image: nginx
+        ports:
+        - containerPort: 80

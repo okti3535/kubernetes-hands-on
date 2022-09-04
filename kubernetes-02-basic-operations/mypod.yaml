@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: nginx-pod
+  labels:    # label yani etiket aws deki tag in karsiligi objeleri gruplandirabiliyoruz
+    app: nginx
+spec: # istenilen durum
+  containers:
+  - name: mynginx
+    image: nginx
+    ports:
+    - containerPort: 80
