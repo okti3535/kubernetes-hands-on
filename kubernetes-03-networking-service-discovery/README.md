@@ -469,10 +469,10 @@ spec:
     rollingUpdate:
       maxUnavailable: 1
       maxSurge: 1
-  template:
+  template: # nod a ait bilgiler burada oldugu icin buranın label indan yakalar
     metadata:
       labels:
-        app: web-flask
+        app: web-flask # service objesi podu bu satirdan yakalar.uyumlu olmasi gerekir
         env: front-end
         version: v1
     spec:
@@ -575,7 +575,7 @@ spec:
   template:
     metadata:
       labels:
-        app: web-flask
+        app: web-flask 
         env: front-end
         version: v1
         test: coupling
