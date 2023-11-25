@@ -275,7 +275,7 @@ web-service   NodePort    10.107.136.54   <none>        3000:30001/TCP   4m38s
 - We see the home page. You can add to-do's.
 
 ### Deploy the second aplication
-
+# basit bir uygulamayı ayaga kaldirip metriklerini görüntüleyeceğiz, başka bir imajla yük bindireceğiz, nasıl autoscale yapıyor onu göreceğiz
 - Create a `php-apache` directory and change directory.
 
 ```bash
@@ -298,7 +298,7 @@ metadata:
 spec:
   selector:
     matchLabels:
-      run: php-apache
+      run: php-apache # pod bağlayacağımız için label atadık
   replicas: 1
   template:
     metadata:
@@ -312,10 +312,10 @@ spec:
         - containerPort: 80
         resources:
           limits:
-            memory: 500Mi
+            memory: 500Mi #max kullanılacak kapasite
             cpu: 100m
           requests:
-            memory: 250Mi
+            memory: 250Mi #minimum istenen kapasite
             cpu: 80m
 ---
 apiVersion: v1
@@ -327,9 +327,9 @@ metadata:
 spec:
   ports:
   - port: 80
-    nodePort: 30002
+    nodePort: 30002 # browser a public ip:30002 yazdığında ekrana ok yazan bir ekran gelmesi gerekiyor
   selector:
-    run: php-apache 
+    run: php-apache #podu tanıyacak
   type: NodePort	
 ```
 
@@ -421,6 +421,7 @@ Now activate the  HPAs;
 
 ```bash
 kubectl autoscale deployment php-apache --cpu-percent=50 --min=2 --max=10 
+# php-apache isimli deployment ı scale et, cpu kullanımı yüzde 50 yi aşarsa min 2 max 10
 kubectl autoscale deployment web-deployment --cpu-percent=50 --min=3 --max=5 
 ```
 or we can use yaml files.
@@ -430,7 +431,7 @@ $ pwd
 /home/ubuntu/microservices
 $ mkdir auto-scaling && cd auto-scaling
 $ cat << EOF > hpa-php-apache.yaml
-
+# yukarıdaki komutun yaml hali aşağıda olduğu gibidir 
 apiVersion: autoscaling/v1
 kind: HorizontalPodAutoscaler
 metadata:
@@ -486,7 +487,7 @@ service/web-service          NodePort    10.107.136.54   <none>        3000:3000
 NAME                                             REFERENCE                   TARGETS         MINPODS   MAXPODS   REPLICAS   AGE
 horizontalpodautoscaler.autoscaling/php-apache   Deployment/php-apache       <unknown>/50%   2         10        2          81s
 horizontalpodautoscaler.autoscaling/web          Deployment/web-deployment   <unknown>/50%   3         5         3          76s
-
+# henüz metrikleri alacağı veri olmadığı için unknown yazıyor
 NAME                                  READY   STATUS    RESTARTS   AGE    IP           NODE       NOMINATED NODE   READINESS GATES
 pod/db-deployment-8597967796-q7x5s    1/1     Running   0          105m   172.18.0.5   minikube   <none>           <none>
 pod/php-apache-7869bd4fb-fgkpf        1/1     Running   0          66s    172.18.0.7   minikube   <none>           <none>
